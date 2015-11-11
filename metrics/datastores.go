@@ -77,7 +77,7 @@ func ensureMongoIndex() {
 		DropDups:    false,
 		Background:  true,
 		Sparse:      true,
-		ExpireAfter: 60, // in seconds
+		ExpireAfter: 3600, // in seconds
 	})
 
 	if err != nil {

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
   "log"
-	"encoding/json"
   "math/rand"
 
 	"github.com/streadway/amqp"
@@ -32,6 +31,8 @@ func SendMessage() {
 		nil,      // arguments
 	)
 
+  msg := bodyFrom(os.Args)
+
 	err = ch.Publish(
 		"metrics", // exchange
 		"",     // routing key
@@ -39,12 +40,12 @@ func SendMessage() {
 		false,  // immediate
 		amqp.Publishing{
 			ContentType: "text/plain",
-			Body:        bodyFrom(os.Args),
+			Body: msg,
 		})
 
 	failOnError(err, "Failed to publish a message")
 
-	log.Printf("Message Sent.")
+  log.Printf("Message Sent: %s", msg)
 
 }
 
@@ -59,11 +60,14 @@ func bodyFrom(args []string) []byte{
   var m metrics.Metric
   if len(args) > 2 {
     m.Username = args[2]
+  } else {
+    m.Username = "test_user"
   }
   if len(args) > 3 {
     m.Metric = args[3]
+  } else {
+    m.Metric = "some_metric"
   }
   m.Count = rand.Int63()
-  body, _ := json.Marshal(m)
-  return body
+  return m.JSON()
 }

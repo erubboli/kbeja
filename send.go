@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"math/rand"
 	"os"
-  "log"
-  "math/rand"
+	"time"
 
-	"github.com/streadway/amqp"
 	"github.com/erubboli/kbeja/metrics"
+	"github.com/streadway/amqp"
 )
-
 
 func SendMessage() {
 
@@ -22,30 +22,31 @@ func SendMessage() {
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
-		"metrics",// name
-		"fanout", // type
-		true,     // durable
-		false,    // auto-deleted
-		false,    // internal
-		false,    // no-wait
-		nil,      // arguments
+		"metrics", // name
+		"fanout",  // type
+		true,      // durable
+		false,     // auto-deleted
+		false,     // internal
+		false,     // no-wait
+		nil,       // arguments
 	)
 
-  msg := bodyFrom(os.Args)
+	msg := bodyFrom(os.Args)
 
 	err = ch.Publish(
 		"metrics", // exchange
-		"",     // routing key
-		false,  // mandatory
-		false,  // immediate
+		"",        // routing key
+		false,     // mandatory
+		false,     // immediate
 		amqp.Publishing{
+			//DeliveryMode: amqp.Persistent,
 			ContentType: "text/plain",
-			Body: msg,
+			Body:        msg,
 		})
 
 	failOnError(err, "Failed to publish a message")
 
-  log.Printf("Message Sent: %s", msg)
+	log.Printf("Message Sent: %s", msg)
 
 }
 
@@ -56,18 +57,19 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func bodyFrom(args []string) []byte{
-  var m metrics.Metric
-  if len(args) > 2 {
-    m.Username = args[2]
-  } else {
-    m.Username = "test_user"
-  }
-  if len(args) > 3 {
-    m.Metric = args[3]
-  } else {
-    m.Metric = "some_metric"
-  }
-  m.Count = rand.Int63()
-  return m.JSON()
+func bodyFrom(args []string) []byte {
+	var m metrics.Metric
+	if len(args) > 2 {
+		m.Username = args[2]
+	} else {
+		m.Username = "test_user"
+	}
+	if len(args) > 3 {
+		m.Metric = args[3]
+	} else {
+		m.Metric = "some_metric"
+	}
+	rand.Seed(time.Now().UTC().UnixNano())
+	m.Count = rand.Int63()
+	return m.JSON()
 }

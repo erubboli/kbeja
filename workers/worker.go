@@ -19,12 +19,12 @@ func Execute(performer Performer, name string) {
 			if err != nil {
 				log.Printf("Error %s", err)
 			} else {
-        performer(m)
+				performer(m)
 			}
 			d.Ack(false)
 		}
 	}()
 
-	log.Printf("%s: Waiting for messages.",name)
+	log.Printf("%s: Waiting for messages.", name)
 	<-forever
 }

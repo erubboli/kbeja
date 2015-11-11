@@ -3,7 +3,7 @@ package workers
 import (
 	"log"
 
-	"github.com/erubboli/koding/metrics"
+	"github.com/erubboli/kbeja/metrics"
 )
 
 type Performer func(metrics.Metric)

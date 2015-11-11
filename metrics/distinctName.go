@@ -65,7 +65,6 @@ func parseKey(key string) (time.Time, string, error) {
 	}
 
 	return date, s[2], nil
-
 }
 
 func metricMonthKey(metric string, date time.Time) string {

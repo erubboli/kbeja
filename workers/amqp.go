@@ -7,7 +7,7 @@ import (
 
 	"github.com/streadway/amqp"
 
-	"github.com/erubboli/koding/metrics"
+	"github.com/erubboli/kbeja/metrics"
 )
 
 func failOnError(err error, msg string) {

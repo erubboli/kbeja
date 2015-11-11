@@ -8,7 +8,7 @@ import (
   "math/rand"
 
 	"github.com/streadway/amqp"
-	"github.com/erubboli/koding/metrics"
+	"github.com/erubboli/kbeja/metrics"
 )
 
 

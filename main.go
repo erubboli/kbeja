@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/erubboli/koding/workers"
-	"github.com/erubboli/koding/metrics"
+	"github.com/erubboli/kbeja/workers"
+	"github.com/erubboli/kbeja/metrics"
 )
 
 var startDistinctNameWorker = flag.Bool("distinctName", false, "Start Distinct Name Worker")
@@ -18,12 +18,16 @@ func main() {
 
 	if *startDistinctNameWorker {
     workers.Execute(metrics.DistinctName, "DistinctName")
+
 	} else if *startHourlyLogWorker {
     workers.Execute(metrics.HourlyLog, "HourlyLog")
+
 	} else if *startAccountNameWorker {
     workers.Execute(metrics.AccountName, "AccountName")
+
 	} else if *sendMessageToQueue {
     SendMessage()
+
 	} else {
 		fmt.Println("Usage:")
 		flag.PrintDefaults()

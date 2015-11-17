@@ -19,7 +19,7 @@ func failOnError(err error, msg string) {
 
 var msgs <-chan amqp.Delivery
 
-func Rabbit() <-chan amqp.Delivery {
+func Rabbit(serviceName string) <-chan amqp.Delivery {
 
 	if msgs == nil {
 		conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
@@ -42,12 +42,12 @@ func Rabbit() <-chan amqp.Delivery {
 		failOnError(err, "Failed to declare an exchange")
 
 		q, err := rabbit.QueueDeclare(
-			"",    // name
-			false, // durable
-			false, // delete when usused
-			true,  // exclusive
-			false, // no-wait
-			nil,   // arguments
+			serviceName, // name
+			true,        // durable
+			false,       // delete when usused
+			true,        // exclusive
+			false,       // no-wait
+			nil,         // arguments
 		)
 		failOnError(err, "Failed to declare a queue")
 
@@ -59,12 +59,12 @@ func Rabbit() <-chan amqp.Delivery {
 			nil)
 		failOnError(err, "Failed to bind a queue")
 
-		//err = rabbit.Qos(
-		//  1,     // prefetch count
-		//  0,     // prefetch size
-		//  false, // global
-		//)
-		//failOnError(err, "Failed to set QoS")
+		err = rabbit.Qos(
+			1,     // prefetch count
+			0,     // prefetch size
+			false, // global
+		)
+		failOnError(err, "Failed to set QoS")
 
 		msgs, err = rabbit.Consume(
 			q.Name, // queue

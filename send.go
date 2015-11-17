@@ -39,9 +39,9 @@ func SendMessage() {
 		false,     // mandatory
 		false,     // immediate
 		amqp.Publishing{
-			//DeliveryMode: amqp.Persistent,
-			ContentType: "text/plain",
-			Body:        msg,
+			DeliveryMode: amqp.Persistent,
+			ContentType:  "text/plain",
+			Body:         msg,
 		})
 
 	failOnError(err, "Failed to publish a message")

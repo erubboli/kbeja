@@ -12,7 +12,7 @@ func Execute(performer Performer, name string) {
 	forever := make(chan bool)
 
 	go func() {
-		msgs := Rabbit()
+		msgs := Rabbit(name)
 		for d := range msgs {
 			log.Printf("%s received a message: %s", name, d.Body)
 			m, err := parseMessage(d)
